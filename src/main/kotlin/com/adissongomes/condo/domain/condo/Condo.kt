@@ -1,21 +1,35 @@
 package com.adissongomes.condo.domain.condo
 
 import com.adissongomes.condo.domain.common.AddressVO
+import com.adissongomes.condo.domain.common.exception.DuplicatedEntityException
 import java.util.UUID
 
 class Condo(
     val id: UUID = UUID.randomUUID(),
     val name: String,
     val address: AddressVO,
-    val buildings: List<CondoBuilding> = listOf()
+    private val buildingSet: MutableSet<CondoBuilding> = mutableSetOf()
 ) {
+
+    val buildings get() = buildingSet.toList()
 
     fun validate() {
         require(name.isNotBlank()) { "Name cannot be blank" }
     }
 
+    fun addBuilding(building: CondoBuilding) {
+        if (buildingSet.any { it.name.equals(building.name, true) }) {
+            throw DuplicatedEntityException("Building ${building.name} already exists in condo $name")
+        }
+        buildingSet.add(building)
+    }
+
+    fun removeBuilding(buildingId: UUID) {
+        buildingSet.removeIf { it.id == buildingId }
+    }
+
     fun getBuilding(buildingId: UUID): CondoBuilding {
-        return buildings.first { it.id == buildingId }
+        return buildingSet.first { it.id == buildingId }
     }
 
     override fun equals(other: Any?): Boolean {
@@ -56,6 +70,12 @@ class CondoBuilding(
 
     override fun hashCode(): Int {
         return id.hashCode()
+    }
+
+    companion object {
+        fun withId(buildingId: UUID): CondoBuilding {
+            return CondoBuilding(buildingId, "", "")
+        }
     }
 
 }
