@@ -1,5 +1,6 @@
 package com.adissongomes.condo.domain.condo
 
+import com.adissongomes.condo.domain.condo.port.input.CondoDomainService
 import com.adissongomes.condo.domain.condomanager.CondoManager
 import org.springframework.stereotype.Service
 import java.util.UUID

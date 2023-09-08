@@ -5,7 +5,7 @@ import com.adissongomes.condo.domain.condo.dto.CondoCreationDTO
 import com.adissongomes.condo.domain.condo.dto.CondoDTO
 import java.util.UUID
 
-interface CondoService {
+interface CondoApplicationService {
     fun create(condoCreationDTO: CondoCreationDTO): CondoDTO
     fun getAll(): List<CondoDTO>
     fun associateManager(condoId: UUID, condoManagerId: UUID)

@@ -5,7 +5,7 @@ import com.adissongomes.condo.domain.common.AddressVO
 import com.adissongomes.condo.domain.condo.dto.CondoBuildingCreationDTO
 import com.adissongomes.condo.domain.condo.dto.CondoCreationDTO
 import com.adissongomes.condo.domain.condo.dto.CondoDTO
-import com.adissongomes.condo.domain.condo.port.input.CondoService
+import com.adissongomes.condo.domain.condo.port.input.CondoApplicationService
 import com.adissongomes.condo.domain.condomanager.dto.CondoManagerCreationDTO
 import com.adissongomes.condo.domain.condomanager.dto.CondoManagerDTO
 import com.adissongomes.condo.domain.condomanager.exception.CondoManagementRestrictionException
@@ -36,7 +36,7 @@ class CondoManagerServiceIntegrationTest {
     private lateinit var condoManagerService: CondoManagerService
 
     @Autowired
-    private lateinit var condoService: CondoService
+    private lateinit var condoApplicationService: CondoApplicationService
 
     @SpykBean
     private lateinit var condoManagerRepository: CondoManagerRepository
@@ -55,14 +55,14 @@ class CondoManagerServiceIntegrationTest {
     @Order(2)
     fun `should create a condo`() {
         val address = AddressVO("Street", "1", "A", "68000000")
-        condo = condoService.create(CondoCreationDTO("Condo Integration", address))
+        condo = condoApplicationService.create(CondoCreationDTO("Condo Integration", address))
         assertNotNull(condo)
     }
 
     @Test
     @Order(3)
     fun `should associate the condo manager`() {
-        condoService.associateManager(condo.id, manager.id)
+        condoApplicationService.associateManager(condo.id, manager.id)
         verify { condoManagerRepository.associateCondo(any(), any()) }
     }
 
@@ -70,7 +70,7 @@ class CondoManagerServiceIntegrationTest {
     @Order(4)
     fun `should add building in the condo`() {
         val creationDTO = CondoBuildingCreationDTO("Building Integration", "Integration sample")
-        condo = condoService.createBuilding(condo.id, manager.id, creationDTO)
+        condo = condoApplicationService.createBuilding(condo.id, manager.id, creationDTO)
         assertNotNull(condo)
         assertEquals(1, condo.buildings.size)
     }
@@ -78,7 +78,7 @@ class CondoManagerServiceIntegrationTest {
     @Test
     @Order(5)
     fun `should remove building from the condo`() {
-        condo = condoService.removeBuilding(manager.id, condo.buildings[0].id)
+        condo = condoApplicationService.removeBuilding(manager.id, condo.buildings[0].id)
         assertNotNull(condo)
         assertEquals(0, condo.buildings.size)
     }
@@ -89,7 +89,7 @@ class CondoManagerServiceIntegrationTest {
         val localManager = condoManagerService.create(CondoManagerCreationDTO("Temporary", "12123123111100"))
         val creationDTO = CondoBuildingCreationDTO("Building Integration", "Integration sample")
         assertThrows<CondoManagementRestrictionException> {
-            condoService.createBuilding(
+            condoApplicationService.createBuilding(
                 condo.id,
                 localManager.id,
                 creationDTO
@@ -102,7 +102,7 @@ class CondoManagerServiceIntegrationTest {
     fun `should fail when try to add building in the condo with an inexistent manager`() {
         val creationDTO = CondoBuildingCreationDTO("Building Integration", "Integration sample")
         assertThrows<NoSuchElementException> {
-            condoService.createBuilding(
+            condoApplicationService.createBuilding(
                 condo.id,
                 UUID.randomUUID(),
                 creationDTO

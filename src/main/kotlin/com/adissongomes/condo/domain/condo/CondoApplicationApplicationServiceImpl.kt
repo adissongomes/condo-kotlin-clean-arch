@@ -5,16 +5,17 @@ import com.adissongomes.condo.domain.condo.dto.CondoCreationDTO
 import com.adissongomes.condo.domain.condo.dto.CondoDTO
 import com.adissongomes.condo.domain.condo.dto.toDTO
 import com.adissongomes.condo.domain.condo.dto.toDomain
-import com.adissongomes.condo.domain.condo.port.input.CondoService
+import com.adissongomes.condo.domain.condo.port.input.CondoDomainService
+import com.adissongomes.condo.domain.condo.port.input.CondoApplicationService
 import com.adissongomes.condo.domain.condo.port.output.CondoRepository
 import com.adissongomes.condo.domain.condomanager.port.output.CondoManagerRepository
 import java.util.UUID
 
-internal class CondoApplicationServiceImpl(
+internal class CondoApplicationApplicationServiceImpl(
     private val condoDomainService: CondoDomainService,
     private val condoRepository: CondoRepository,
     private val condoManagerRepository: CondoManagerRepository,
-) : CondoService {
+) : CondoApplicationService {
 
     override fun create(condoCreationDTO: CondoCreationDTO): CondoDTO {
         val condo = condoCreationDTO.toDomain().also { it.validate() }

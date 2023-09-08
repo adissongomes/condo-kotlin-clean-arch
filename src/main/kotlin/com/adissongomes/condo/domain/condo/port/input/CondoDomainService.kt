@@ -1,5 +1,7 @@
-package com.adissongomes.condo.domain.condo
+package com.adissongomes.condo.domain.condo.port.input
 
+import com.adissongomes.condo.domain.condo.Condo
+import com.adissongomes.condo.domain.condo.CondoBuilding
 import com.adissongomes.condo.domain.condomanager.CondoManager
 import java.util.UUID
 
