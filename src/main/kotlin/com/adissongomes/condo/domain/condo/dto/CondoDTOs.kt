@@ -20,7 +20,7 @@ data class CondoDTO(
     val id: UUID,
     val name: String,
     val address: AddressVO,
-    val buildings: Set<CondoBuilding>,
+    val buildings: List<CondoBuilding>,
 )
 
 data class CondoBuildingDTO(

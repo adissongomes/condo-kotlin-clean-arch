@@ -11,5 +11,5 @@ interface CondoRepository {
     fun byBuildingId(buildingId: UUID): Optional<Condo>
     fun findAll(): List<Condo>
     fun addBuilding(condo: Condo, building: CondoBuilding): Condo
-    fun removeBuilding(building: CondoBuilding): Condo
+    fun removeBuilding(buildingId: UUID): Condo
 }

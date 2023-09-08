@@ -1,4 +1,4 @@
-package com.adissongomes.condo.db.condo
+package com.adissongomes.condo.data.condo
 
 import com.adissongomes.condo.domain.condo.Condo
 import com.adissongomes.condo.domain.condo.CondoBuilding
@@ -34,19 +34,18 @@ class CondoMapRepository : CondoRepository {
 
     override fun addBuilding(condo: Condo, building: CondoBuilding): Condo =
         data[condo.id]?.let {
-            val buildings = it.buildings.toMutableSet()
+            val buildings = it.buildings.toMutableList()
             buildings.add(building)
             val updatedCondo = Condo(it.id, it.name, it.address, buildings)
             save(updatedCondo)
         }
             ?: throw NoSuchElementException()
 
-    override fun removeBuilding(building: CondoBuilding): Condo =
-        byBuildingId(building.id).orElseThrow()
-            .also {
-                val buildings = it.buildings.toMutableSet()
-                buildings.remove(building)
-                val updatedCondo = Condo(it.id, it.name, it.address, buildings)
-                save(updatedCondo)
-            }
+    override fun removeBuilding(buildingId: UUID): Condo =
+        byBuildingId(buildingId).get().let {
+            val buildings = it.buildings.toMutableList()
+            buildings.remove(it.getBuilding(buildingId))
+            val updatedCondo = Condo(it.id, it.name, it.address, buildings)
+            save(updatedCondo)
+        }
 }

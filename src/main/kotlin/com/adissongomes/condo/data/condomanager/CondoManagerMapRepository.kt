@@ -1,4 +1,4 @@
-package com.adissongomes.condo.db.condomanager
+package com.adissongomes.condo.data.condomanager
 
 import com.adissongomes.condo.domain.condo.Condo
 import com.adissongomes.condo.domain.condomanager.CondoManager

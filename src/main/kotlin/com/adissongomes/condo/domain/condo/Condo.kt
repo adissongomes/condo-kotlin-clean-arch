@@ -7,7 +7,7 @@ class Condo(
     val id: UUID = UUID.randomUUID(),
     val name: String,
     val address: AddressVO,
-    val buildings: Set<CondoBuilding> = setOf()
+    val buildings: List<CondoBuilding> = listOf()
 ) {
 
     fun validate() {
@@ -15,7 +15,7 @@ class Condo(
     }
 
     fun getBuilding(buildingId: UUID): CondoBuilding {
-        return buildings.filter { id == buildingId }.first()
+        return buildings.first { it.id == buildingId }
     }
 
     override fun equals(other: Any?): Boolean {

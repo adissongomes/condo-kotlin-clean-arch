@@ -24,29 +24,29 @@ internal class CondoServiceImpl(
         return condoRepository.findAll().map { it.toDTO() }
     }
 
-    override fun createBuilding(condoId: UUID, condoManagerId: UUID, building: CondoBuildingCreationDTO): CondoDTO {
-        val condo = condoRepository.byId(condoId).orElseThrow()
-        condoManagerRepository.byId(condoManagerId)
-            .orElseThrow()
-            .run { this.canManage(condo) }
-
-        val condoBuilding = building.toDomain()
-        condoBuilding.validate()
-        return condoRepository.addBuilding(condo, condoBuilding).toDTO()
-    }
-
     override fun associateManager(condoId: UUID, condoManagerId: UUID) {
         val condoManager = condoManagerRepository.byId(condoManagerId).orElseThrow()
         val condo = condoRepository.byId(condoId).orElseThrow()
         condoManagerRepository.associateCondo(condoManager, condo)
     }
 
+    override fun createBuilding(condoId: UUID, condoManagerId: UUID, building: CondoBuildingCreationDTO): CondoDTO {
+        val condo = condoRepository.byId(condoId).orElseThrow()
+        checkManager(condoManagerId, condo)
+        val condoBuilding = building.toDomain()
+        condoBuilding.validate()
+        return condoRepository.addBuilding(condo, condoBuilding).toDTO()
+    }
+
     override fun removeBuilding(condoManagerId: UUID, buildingId: UUID): CondoDTO {
         val condo = condoRepository.byBuildingId(buildingId).orElseThrow()
+        checkManager(condoManagerId, condo)
+        return condoRepository.removeBuilding(buildingId).toDTO()
+    }
+
+    private fun checkManager(condoManagerId: UUID, condo: Condo) {
         condoManagerRepository.byId(condoManagerId)
             .orElseThrow()
             .run { this.canManage(condo) }
-        val building = condo.getBuilding(buildingId)
-        return condoRepository.removeBuilding(building).toDTO()
     }
 }
