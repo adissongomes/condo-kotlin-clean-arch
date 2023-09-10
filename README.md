@@ -43,10 +43,6 @@ domain
 The domain package contains the aggregate roots, entities, value objects,
 business exceptions, domain services, application services and input/output ports.
 
-There was added two ways for _application services_ definition. Condo aggregation define 
-just as an input adapter using a service class. 
-CondoManager, in turns, splits the usecases that are called by a service class.
-
 ## Pending
 - rest api definition
 - database integration
